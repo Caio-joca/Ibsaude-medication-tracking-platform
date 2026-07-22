@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Usuário</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            {% if usuario %}
+                Editar Usuário
+            {% else %}
+                Novo Usuário
+            {% endif %}
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label>Nome</label>
+
+                    <input type="text"
+                           name="nome"
+                           class="form-control"
+                           value="{{ usuario.nome if usuario else '' }}"
+                           required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Senha</label>
+
+                    <input type="password"
+                           name="senha"
+                           class="form-control"
+                           value="{{ usuario.senha if usuario else '' }}"
+                           required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>CPF</label>
+
+                    <input type="text"
+                           name="cpf"
+                           class="form-control"
+                           value="{{ usuario.cpf if usuario else '' }}"
+                           required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Email</label>
+
+                    <input type="email"
+                           name="email"
+                           class="form-control"
+                           value="{{ usuario.email if usuario else '' }}"
+                           required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Perfil</label>
+
+                    <select name="perfil" class="form-select" required>
+
+                        <option value="">Selecione</option>
+
+                        <option value="A"
+                        {% if usuario and usuario.perfil=='A' %}selected{% endif %}>
+                            Administrador
+                        </option>
+
+                        <option value="F"
+                        {% if usuario and usuario.perfil=='F' %}selected{% endif %}>
+                            Farmacêutico
+                        </option>
+
+                        <option value="G"
+                        {% if usuario and usuario.perfil=='G' %}selected{% endif %}>
+                            Gestor
+                        </option>
+
+                        <option value="U"
+                        {% if usuario and usuario.perfil=='U' %}selected{% endif %}>
+                            Auditor
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button class="btn btn-success">
+                    Salvar
+                </button>
+
+                <a href="/usuarios" class="btn btn-secondary">
+                    Voltar
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

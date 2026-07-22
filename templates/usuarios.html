@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRUD Usuários</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <span class="navbar-brand">
+            Sistema de Usuários
+        </span>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            Usuários
+        </div>
+
+        <div class="card-body">
+            <!-- FORM PESQUISA -->
+            <form method="GET" class="row mb-3">
+                <div class="col-md-10">
+
+                    <input type="text"
+                           name="pesquisa"
+                           class="form-control"
+                          placeholder="Pesquisar...">
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-primary">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+
+            <!-- BOTÃO NOVO (SEM JS) -->
+            <a href="/usuarios/novo" class="btn btn-success mb-3">
+                Novo Usuário
+            </a>
+            <!-- TABELA -->
+            <table class="table table-striped">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Email</th>
+                        <th>Perfil</th>
+                        <th>Ações</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for u in usuarios %}
+
+                    <tr>
+
+                        <td>{{u.id_usuario}}</td>
+                        <td>{{u.nome}}</td>
+                        <td>{{u.cpf}}</td>
+                        <td>{{u.email}}</td>
+                        <td>{{u.perfil}}</td>
+
+                        <td>
+
+                            <a href="/usuarios/editar/{{u.id_usuario}}"
+                               class="btn btn-warning btn-sm">
+
+                                Editar
+
+                            </a>
+
+                            <a href="/usuarios/excluir/{{u.id_usuario}}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Excluir usuário?')">
+
+                                Excluir
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Ajuste de inventário | IBSAÚDE{% endblock %}{% block content %}
+<h1 class="h3">Ajuste de inventário</h1><div class="alert alert-warning">Medicamento: {{ estoque.medicamento.nome }} · lote {{ estoque.lote }} · saldo atual {{ estoque.quantidade }}</div>
+<form method="POST" class="card card-body shadow-sm"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="mb-3"><label class="form-label">Nova quantidade</label><input class="form-control" type="number" min="0" name="quantidade" required></div><div class="mb-3"><label class="form-label">Justificativa</label><textarea class="form-control" name="justificativa" minlength="10" required></textarea></div><button class="btn btn-warning">Registrar ajuste</button></form>
+{% endblock %}

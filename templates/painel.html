@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Painel | IBSAÚDE{% endblock %}
+{% block content %}
+<h1 class="h3 mb-1">Painel gerencial</h1>
+<p class="text-secondary">Estoque atual, alertas e resultados operacionais.</p>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card card-body shadow-sm"><span class="text-secondary">Unidades em estoque</span><strong class="display-6">{{ total_unidades }}</strong></div></div>
+  <div class="col-md-3"><div class="card card-body shadow-sm"><span class="text-secondary">Lotes com saldo</span><strong class="display-6">{{ total_lotes }}</strong></div></div>
+  <div class="col-md-3"><div class="card card-body shadow-sm"><span class="text-secondary">Estoque baixo</span><strong class="display-6 text-danger">{{ baixos|length }}</strong></div></div>
+  <div class="col-md-3"><div class="card card-body shadow-sm"><span class="text-secondary">Total adquirido</span><strong class="h3 mt-2">R$ {{ '%.2f'|format(total_investido) }}</strong></div></div>
+</div>
+
+<form class="card card-body shadow-sm mb-4" method="GET">
+  <h2 class="h5">Recorte dos resultados</h2>
+  <div class="row g-2 align-items-end">
+    <div class="col-md-2"><label class="form-label">Início</label><input class="form-control" type="date" name="inicio" value="{{ filtros.inicio }}"></div>
+    <div class="col-md-2"><label class="form-label">Fim</label><input class="form-control" type="date" name="fim" value="{{ filtros.fim }}"></div>
+    <div class="col-md-3"><label class="form-label">Usuário</label><select class="form-select" name="usuario"><option value="">Todos</option>{% for u in usuarios %}<option value="{{ u.id_usuario }}" {{ 'selected' if filtros.usuario==u.id_usuario else '' }}>{{ u.nome }}</option>{% endfor %}</select></div>
+    <div class="col-md-3"><label class="form-label">Unidade</label><select class="form-select" name="unidade"><option value="">Todas</option>{% for u in unidades %}<option value="{{ u.id_destino }}" {{ 'selected' if filtros.unidade==u.id_destino else '' }}>{{ u.nome }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Aplicar</button></div>
+  </div>
+</form>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card card-body shadow-sm border-start border-success border-4"><span class="text-secondary">Entradas no período</span><strong class="h3">{{ entradas_qtd }}</strong><small>R$ {{ '%.2f'|format(entradas_valor) }}</small></div></div>
+  <div class="col-md-4"><div class="card card-body shadow-sm border-start border-primary border-4"><span class="text-secondary">Saídas no período</span><strong class="h3">{{ saidas_qtd }}</strong><small>R$ {{ '%.2f'|format(saidas_valor) }}</small></div></div>
+  <div class="col-md-4"><div class="card card-body shadow-sm border-start border-warning border-4"><span class="text-secondary">Devoluções no período</span><strong class="h3">{{ devolucoes_qtd }}</strong><small>{{ movimentos_recentes|length }} movimentações recentes exibidas</small></div></div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-6"><div class="card card-body shadow-sm"><h2 class="h5">Itens críticos</h2><ul class="mb-0">{% for m,saldo in baixos %}<li>{{ m.nome }}: {{ saldo }} / mínimo {{ m.estoque_minimo }}</li>{% else %}<li>Nenhum item abaixo do mínimo.</li>{% endfor %}</ul></div></div>
+  <div class="col-lg-6"><div class="card card-body shadow-sm"><h2 class="h5">Validade dos lotes (até 90 dias)</h2><ul class="mb-0">{% for lote in vencimentos %}<li class="{{ 'text-danger' if lote.dt_validade < today else '' }}">{{ lote.medicamento.nome }} — lote {{ lote.lote }} — {{ lote.dt_validade.strftime('%d/%m/%Y') }}</li>{% else %}<li>Nenhum lote nessa faixa.</li>{% endfor %}</ul></div></div>
+</div>
+
+<div class="card card-body shadow-sm"><h2 class="h5">Últimas movimentações do recorte</h2><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Data</th><th>Tipo</th><th>Medicamento</th><th>Quantidade</th><th>Responsável</th><th>Unidade</th></tr></thead><tbody>{% for m in movimentos_recentes %}<tr><td>{{ m.dt_movimentacao.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ m.tipo_movimentacao }}</td><td>{{ m.medicamento.nome }}</td><td>{{ m.quantidade }}</td><td>{{ m.usuario.nome if m.usuario else '-' }}</td><td>{{ m.distribuicao.unidade.nome if m.distribuicao else '-' }}</td></tr>{% else %}<tr><td colspan="6" class="text-center">Nenhuma movimentação no recorte.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

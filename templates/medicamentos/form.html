@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Medicamento | IBSAÚDE{% endblock %}
+{% block content %}
+<h1 class="h3">{{ 'Editar' if medicamento else 'Novo' }} medicamento</h1>
+<form method="POST" class="card card-body shadow-sm"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="row g-3">
+{% for campo,rotulo in [('nome','Nome'),('classificacao','Classificação'),('codigo','Código'),('uso','Uso específico'),('apresentacao','Apresentação'),('principio_ativo','Princípio ativo')] %}<div class="col-md-6"><label class="form-label">{{ rotulo }}</label><input class="form-control" name="{{ campo }}" value="{{ request.form.get(campo, medicamento|attr(campo) if medicamento else '') }}" required></div>{% endfor %}
+<div class="col-md-6"><label class="form-label">Fabricante</label><select class="form-select" name="id_fabricante" required><option value="">Selecione</option>{% set atual=request.form.get('id_fabricante', medicamento.id_fabricante if medicamento else '')|string %}{% for f in fabricantes %}<option value="{{ f.id_fabricante }}" {{ 'selected' if atual==f.id_fabricante|string else '' }}>{{ f.nome }}</option>{% endfor %}</select></div>
+<div class="col-md-6"><label class="form-label">Estoque mínimo</label><input class="form-control" type="number" min="0" name="estoque_minimo" value="{{ request.form.get('estoque_minimo', medicamento.estoque_minimo if medicamento else 0) }}" required></div>
+</div><div class="mt-3"><button class="btn btn-success">Salvar</button> <a class="btn btn-secondary" href="{{ url_for('medicamentos.listar') }}">Voltar</a></div></form>
+{% endblock %}

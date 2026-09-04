@@ -1,94 +1,77 @@
-# 💊 IBSaúde — Smart Medication Tracking Platform
+# IBSAÚDE
 
-> A secure and traceable medication management platform designed for healthcare operations.
+Sistema web para controle e rastreabilidade de medicamentos, da aquisição à distribuição. Desenvolvido em Flask, com estoque por lote, FEFO, devoluções, auditoria imutável, relatórios e acesso por perfil.
 
-## 🚀 About the Project
+## Funcionalidades
 
-This project is being developed as part of a three-month technology residency challenge.
+- autenticação com senha em hash e sessões protegidas;
+- perfis Administrador, Farmacêutico, Gestor e Auditor;
+- usuários, fabricantes, fornecedores, unidades e medicamentos;
+- aquisições com nota, lote, validade, valores e anexos PDF/XML;
+- saldo por lote, estoque mínimo e alertas de validade;
+- distribuição automática pelo lote que vence primeiro (FEFO);
+- bloqueio de lote vencido e de estoque negativo;
+- devoluções e ajustes com justificativa e histórico;
+- rastreabilidade completa e log de auditoria imutável;
+- painel gerencial filtrável e relatórios PDF/Excel.
 
-Its goal is to provide complete medication control and traceability, covering the entire process from acquisition to distribution across healthcare units.
-
-## ✨ Current Features
-
-- User registration
-- User listing and search
-- User information editing
-- User removal
-- Role-based user classification:
-  - Administrator
-  - Pharmacist
-  - Manager
-  - Auditor
-
-## 🛠️ Technology Stack
-
-- Python
-- Flask
-- SQLite
-- HTML
-- Bootstrap
-- Git and GitHub
-
-## 📦 Installation
-
-Clone the repository:
-
-```powershell
-git clone https://github.com/SEU-USUARIO/ibsaude-medication-tracking-platform.git
-cd ibsaude-medication-tracking-platform
-```
-
-Create a virtual environment:
+## Instalação no Windows
 
 ```powershell
 python -m venv .venv
-```
-
-Activate it on Windows:
-
-```powershell
 .\.venv\Scripts\Activate.ps1
-```
-
-Install the dependencies:
-
-```powershell
 python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+python -m flask --app app db upgrade
+python -m flask --app app criar-admin
+python app.py
 ```
 
-Initialize the database:
+Acesse `http://127.0.0.1:5000`. No arquivo `.env`, use uma `SECRET_KEY` longa e aleatória. O administrador inicial deve ser criado pelo comando acima; nenhuma senha padrão fica no repositório.
+
+Para carregar uma base fictícia de demonstração (bloqueada em produção), execute:
 
 ```powershell
-python init_db.py
+python -m flask --app app carregar-demo
 ```
 
-Run the application:
+O comando cria os quatro perfis, cadastros, medicamentos, lotes, aquisições, distribuições, devolução, ajuste e documentos XML. Ele pode ser executado novamente sem duplicar os registros identificados como demonstração.
+
+## Testes
 
 ```powershell
-python cadusuario.py
+python -m pytest -q
+python -m pytest --cov=. --cov-report=term-missing
 ```
 
-Open the application at:
+## Backup
 
-http://127.0.0.1:5000
+```powershell
+python scripts/backup.py
+python scripts/verificar_backup.py backups\NOME_DO_BACKUP.sqlite3
+```
 
-## 🗺️ Roadmap
+A restauração exige confirmação explícita e preserva uma cópia do banco atual:
 
-- Secure authentication
-- Role-based access control
-- Medication registration
-- Supplier and manufacturer management
-- Acquisition management
-- Inventory control by batch and expiration date
-- Medication distribution
-- Complete audit trail
-- Administrative dashboard
-- PDF and Excel reports
-- PostgreSQL migration
-- Cloud deployment
+```powershell
+python scripts/restaurar_sqlite.py backups\NOME_DO_BACKUP.sqlite3 --confirmar
+```
 
-## 📌 Project Status
+## Produção
 
-The project is currently under active development.
+O arquivo `render.yaml` descreve serviço web, PostgreSQL e armazenamento persistente. Configure `FLASK_ENV=production`, `DATABASE_URL`, `SECRET_KEY`, `UPLOAD_FOLDER` e `BACKUP_FOLDER`. O servidor usa `gunicorn wsgi:app`, aplica migrations antes de iniciar e respeita HTTPS encaminhado pelo proxy.
 
-The initial user management module is functional. Authentication, security improvements, medication inventory, traceability, reporting, and deployment are planned for upcoming versions.
+## Estrutura
+
+- `app.py`: fábrica Flask, extensões, blueprints, comandos e cabeçalhos de segurança;
+- `models.py`: entidades e integridade do domínio;
+- `routes/`: controladores HTTP agrupados por módulo;
+- `services/`: regras transacionais de aquisição, estoque, distribuição e auditoria;
+- `utils/`: validação, autorização e anexos;
+- `templates/` e `static/`: interface web;
+- `migrations/`: evolução versionada do banco;
+- `tests/`: testes automatizados;
+- `scripts/`: migração PostgreSQL, backup, verificação e restauração;
+- `docs/`: arquitetura, operação, segurança, API, manuais e validação.
+
+Veja [docs/ARQUITETURA.md](docs/ARQUITETURA.md), [docs/MANUAL_USUARIOS.md](docs/MANUAL_USUARIOS.md) e [docs/STATUS_ENTREGA.md](docs/STATUS_ENTREGA.md).

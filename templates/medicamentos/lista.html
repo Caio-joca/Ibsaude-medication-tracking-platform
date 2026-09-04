@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Medicamentos | IBSAÚDE{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h1 class="h3">Medicamentos</h1>{% if g.usuario.perfil in ['A','F','G'] %}<a class="btn btn-success" href="{{ url_for('medicamentos.novo') }}">Novo medicamento</a>{% endif %}</div>
+<form method="GET" class="row g-2 mb-3"><div class="col"><input class="form-control" name="pesquisa" value="{{ pesquisa }}" placeholder="Nome, código ou princípio ativo"></div><div class="col-auto"><button class="btn btn-primary">Pesquisar</button></div></form>
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Código</th><th>Nome</th><th>Princípio ativo</th><th>Fabricante</th><th>Status</th><th></th></tr></thead><tbody>{% for m in medicamentos %}<tr><td>{{ m.codigo }}</td><td>{{ m.nome }}</td><td>{{ m.principio_ativo }}</td><td>{{ m.fabricante.nome }}</td><td>{{ 'Ativo' if m.ativo else 'Inativo' }}</td><td><a class="btn btn-primary btn-sm" href="{{ url_for('medicamentos.detalhe', id=m.id_medicamento) }}">Detalhes</a></td></tr>{% else %}<tr><td colspan="6" class="text-center">Nenhum medicamento encontrado.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

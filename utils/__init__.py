@@ -1,0 +1,1 @@
+"""Validações e utilitários compartilhados."""

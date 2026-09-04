@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Relatórios | IBSAÚDE{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-center">
+  <h1 class="h3">Relatórios gerenciais</h1>
+  <div><a class="btn btn-danger" href="{{ url_for('relatorios.pdf') }}{% if query_string %}?{{ query_string }}{% endif %}">Exportar PDF</a> <a class="btn btn-success" href="{{ url_for('relatorios.excel') }}{% if query_string %}?{{ query_string }}{% endif %}">Exportar Excel</a></div>
+</div>
+<form class="card card-body my-3" method="GET">
+  <div class="row g-2">
+    <div class="col-md-2"><label class="form-label">Início</label><input class="form-control" type="date" name="inicio" value="{{ request.args.get('inicio','') }}"></div>
+    <div class="col-md-2"><label class="form-label">Fim</label><input class="form-control" type="date" name="fim" value="{{ request.args.get('fim','') }}"></div>
+    <div class="col-md-3"><label class="form-label">Medicamento</label><select class="form-select" name="medicamento"><option value="">Todos</option>{% for m in medicamentos %}<option value="{{ m.id_medicamento }}" {{ 'selected' if request.args.get('medicamento')==m.id_medicamento|string else '' }}>{{ m.nome }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><label class="form-label">Lote</label><input class="form-control" name="lote" value="{{ request.args.get('lote','') }}"></div>
+    <div class="col-md-3"><label class="form-label">Unidade</label><select class="form-select" name="unidade"><option value="">Todas</option>{% for u in unidades %}<option value="{{ u.id_destino }}" {{ 'selected' if request.args.get('unidade')==u.id_destino|string else '' }}>{{ u.nome }}</option>{% endfor %}</select></div>
+    <div class="col-md-3"><label class="form-label">Responsável</label><select class="form-select" name="usuario"><option value="">Todos</option>{% for u in usuarios %}<option value="{{ u.id_usuario }}" {{ 'selected' if request.args.get('usuario')==u.id_usuario|string else '' }}>{{ u.nome }}</option>{% endfor %}</select></div>
+  </div>
+  <button class="btn btn-primary mt-3">Aplicar filtros</button>
+</form>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4"><div class="alert alert-success mb-0">Adquirido: <strong>{{ entradas_qtd }} un.</strong><br>R$ {{ '%.2f'|format(entradas_valor) }}</div></div>
+  <div class="col-md-4"><div class="alert alert-primary mb-0">Distribuído: <strong>{{ saidas_qtd }} un.</strong><br>R$ {{ '%.2f'|format(saidas_valor) }}</div></div>
+  <div class="col-md-4"><div class="alert alert-info mb-0">Movimentação financeira bruta:<br><strong>R$ {{ '%.2f'|format(total) }}</strong></div></div>
+</div>
+
+{% if por_unidade %}<div class="card card-body shadow-sm mb-3"><h2 class="h5">Distribuição por unidade</h2><div class="table-responsive"><table class="table table-sm mb-0"><thead><tr><th>Unidade</th><th>Quantidade</th><th>Valor</th></tr></thead><tbody>{% for nome,resumo in por_unidade %}<tr><td>{{ nome }}</td><td>{{ resumo.quantidade }}</td><td>R$ {{ '%.2f'|format(resumo.valor) }}</td></tr>{% endfor %}</tbody></table></div></div>{% endif %}
+
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Data</th><th>Tipo</th><th>Medicamento</th><th>Lote</th><th>Qtd.</th><th>Unidade</th><th>Responsável</th><th>Valor</th></tr></thead><tbody>{% for m in movimentos %}<tr><td>{{ m.dt_movimentacao.strftime('%d/%m/%Y') }}</td><td>{{ m.tipo_movimentacao }}</td><td>{{ m.medicamento.nome }}</td><td>{{ m.estoque.lote if m.estoque else '-' }}</td><td>{{ m.quantidade }}</td><td>{{ m.distribuicao.unidade.nome if m.distribuicao else '-' }}</td><td>{{ m.usuario.nome if m.usuario else '-' }}</td><td>R$ {{ '%.2f'|format(m.vlr_movimentacao) }}</td></tr>{% else %}<tr><td colspan="8" class="text-center">Nenhum resultado.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

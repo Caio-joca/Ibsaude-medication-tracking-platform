@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }} | IBSAÚDE{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3"><h1 class="h3">{{ titulo }}s</h1><a class="btn btn-success" href="{{ url_for('cadastros.' ~ endpoint ~ '_novo') }}">Novo cadastro</a></div>
+<nav class="mb-3"><a href="{{ url_for('cadastros.fabricantes_listar') }}">Fabricantes</a> · <a href="{{ url_for('cadastros.fornecedores_listar') }}">Fornecedores</a> · <a href="{{ url_for('cadastros.unidades_listar') }}">Unidades</a></nav>
+<form method="GET" class="row g-2 mb-3"><div class="col"><input class="form-control" name="pesquisa" value="{{ pesquisa }}" placeholder="Nome, CNPJ ou e-mail"></div><div class="col-auto"><button class="btn btn-primary">Pesquisar</button></div></form>
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Nome</th><th>CNPJ</th><th>E-mail</th><th>Telefone</th><th></th></tr></thead><tbody>{% for item in itens %}<tr><td>{{ item.nome }}</td><td>{{ item.cnpj }}</td><td>{{ item.email }}</td><td>{{ item.telefone }}</td><td><a class="btn btn-warning btn-sm" href="{{ url_for('cadastros.' ~ endpoint ~ '_editar', id=item.id_fabricante if endpoint=='fabricantes' else item.id_fornecedor if endpoint=='fornecedores' else item.id_destino) }}">Editar</a></td></tr>{% else %}<tr><td colspan="5" class="text-center">Nenhum cadastro encontrado.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

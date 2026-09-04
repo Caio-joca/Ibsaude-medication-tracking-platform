@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }} | IBSAÚDE{% endblock %}
+{% block content %}
+<h1 class="h3">{{ 'Editar' if item else 'Novo' }} {{ titulo|lower }}</h1>
+<form method="POST" class="card card-body shadow-sm"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="row g-3">
+{% for campo,rotulo,tipo in [('nome','Nome','text'),('cnpj','CNPJ','text'),('endereco','Endereço','text'),('email','E-mail','email'),('telefone','Telefone','text')] %}<div class="col-md-6"><label class="form-label">{{ rotulo }}</label><input class="form-control" type="{{ tipo }}" name="{{ campo }}" value="{{ request.form.get(campo, item|attr(campo) if item else '') }}" required></div>{% endfor %}
+</div><div class="mt-3"><button class="btn btn-success">Salvar</button> <a class="btn btn-secondary" href="{{ url_for('cadastros.' ~ endpoint ~ '_listar') }}">Voltar</a></div></form>
+{% endblock %}

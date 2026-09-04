@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ medicamento.nome }} | IBSAÚDE{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between"><h1 class="h3">{{ medicamento.nome }}</h1><a class="btn btn-secondary" href="{{ url_for('medicamentos.listar') }}">Voltar</a></div>
+<dl class="row card card-body mt-3"><dt class="col-sm-3">Código</dt><dd class="col-sm-9">{{ medicamento.codigo }}</dd><dt class="col-sm-3">Classificação</dt><dd class="col-sm-9">{{ medicamento.classificacao }}</dd><dt class="col-sm-3">Uso</dt><dd class="col-sm-9">{{ medicamento.uso }}</dd><dt class="col-sm-3">Apresentação</dt><dd class="col-sm-9">{{ medicamento.apresentacao }}</dd><dt class="col-sm-3">Princípio ativo</dt><dd class="col-sm-9">{{ medicamento.principio_ativo }}</dd><dt class="col-sm-3">Fabricante</dt><dd class="col-sm-9">{{ medicamento.fabricante.nome }}</dd><dt class="col-sm-3">Responsável</dt><dd class="col-sm-9">{{ medicamento.responsavel.nome }}</dd></dl>
+{% if g.usuario.perfil in ['A','F','G'] %}<a class="btn btn-warning" href="{{ url_for('medicamentos.editar', id=medicamento.id_medicamento) }}">Editar</a>{% if medicamento.ativo %}<form class="d-inline" method="POST" action="{{ url_for('medicamentos.inativar', id=medicamento.id_medicamento) }}" data-confirm="Inativar medicamento?"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger">Inativar</button></form>{% endif %}{% endif %}
+{% endblock %}

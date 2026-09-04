@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Aquisição {{ aquisicao.id_aquisicao }} | IBSAÚDE{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between"><h1 class="h3">Aquisição #{{ aquisicao.id_aquisicao }}</h1><a class="btn btn-secondary" href="{{ url_for('aquisicoes.listar') }}">Voltar</a></div>
+<dl class="row card card-body mt-3"><dt class="col-sm-3">Medicamento</dt><dd class="col-sm-9">{{ aquisicao.medicamento.nome }}</dd><dt class="col-sm-3">Fornecedor</dt><dd class="col-sm-9">{{ aquisicao.fornecedor.nome }}</dd><dt class="col-sm-3">Nota fiscal</dt><dd class="col-sm-9">{{ aquisicao.notafiscal }}</dd><dt class="col-sm-3">Lote / validade</dt><dd class="col-sm-9">{{ aquisicao.lote }} / {{ aquisicao.dt_validade.strftime('%d/%m/%Y') }}</dd><dt class="col-sm-3">Quantidade</dt><dd class="col-sm-9">{{ aquisicao.quantidade }}</dd><dt class="col-sm-3">Valor</dt><dd class="col-sm-9">R$ {{ '%.2f'|format(aquisicao.vlr_unitario) }} × {{ aquisicao.quantidade }} = R$ {{ '%.2f'|format(aquisicao.vlr_total) }}</dd><dt class="col-sm-3">Recebido por</dt><dd class="col-sm-9">{{ aquisicao.responsavel.nome }}</dd><dt class="col-sm-3">Saldo do lote</dt><dd class="col-sm-9">{{ aquisicao.estoque.quantidade }}</dd></dl>
+<h2 class="h5">Documentos</h2><ul>{% for d in aquisicao.documentos %}<li><a href="{{ url_for('aquisicoes.documento', id=d.id_documento) }}">{{ d.nome_original }}</a> ({{ d.tipo }})</li>{% else %}<li>Nenhum documento anexado.</li>{% endfor %}</ul>
+<h2 class="h5">Movimentações geradas</h2><ul>{% for m in aquisicao.movimentacoes %}<li>{{ m.tipo_movimentacao }} — {{ m.quantidade }} unidades — R$ {{ '%.2f'|format(m.vlr_movimentacao) }}</li>{% endfor %}</ul>
+{% endblock %}

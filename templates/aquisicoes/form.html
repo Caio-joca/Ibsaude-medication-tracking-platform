@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Nova aquisição | IBSAÚDE{% endblock %}
+{% block content %}
+<h1 class="h3">Nova aquisição</h1>
+<p class="text-secondary">Ao salvar, o sistema cria o saldo do lote e a movimentação de entrada na mesma transação.</p>
+<form method="POST" enctype="multipart/form-data" class="card card-body shadow-sm"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="row g-3">
+<div class="col-md-6"><label class="form-label">Medicamento</label><select class="form-select" name="id_medicamento" required><option value="">Selecione</option>{% for m in medicamentos %}<option value="{{ m.id_medicamento }}" {{ 'selected' if request.form.get('id_medicamento')==m.id_medicamento|string else '' }}>{{ m.nome }} — {{ m.codigo }}</option>{% endfor %}</select></div>
+<div class="col-md-6"><label class="form-label">Fornecedor</label><select class="form-select" name="id_fornecedor" required><option value="">Selecione</option>{% for f in fornecedores %}<option value="{{ f.id_fornecedor }}" {{ 'selected' if request.form.get('id_fornecedor')==f.id_fornecedor|string else '' }}>{{ f.nome }}</option>{% endfor %}</select></div>
+{% for campo,rotulo,tipo in [('dt_compra','Data da compra','date'),('dt_validade','Validade','date'),('quantidade','Quantidade','number'),('vlr_unitario','Valor unitário','number'),('notafiscal','Nota fiscal','text'),('lote','Lote','text')] %}<div class="col-md-4"><label class="form-label">{{ rotulo }}</label><input class="form-control" type="{{ tipo }}" name="{{ campo }}" value="{{ request.form.get(campo, '') }}" {% if campo=='quantidade' %}min="1" step="1"{% elif campo=='vlr_unitario' %}min="0" step="0.01"{% endif %} required></div>{% endfor %}
+<div class="col-12"><label class="form-label">Documentos PDF ou XML</label><input class="form-control" type="file" name="documentos" accept=".pdf,.xml,application/pdf,text/xml,application/xml" multiple><div class="form-text">Máximo total da requisição: 10 MB.</div></div>
+</div><div class="mt-3"><button class="btn btn-success">Registrar entrada</button> <a class="btn btn-secondary" href="{{ url_for('aquisicoes.listar') }}">Voltar</a></div></form>
+{% endblock %}

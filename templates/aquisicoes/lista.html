@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Aquisições | IBSAÚDE{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h1 class="h3">Aquisições</h1>{% if g.usuario.perfil in ['A','F','G'] %}<a class="btn btn-success" href="{{ url_for('aquisicoes.nova') }}">Nova aquisição</a>{% endif %}</div>
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Entrada</th><th>Medicamento</th><th>Fornecedor</th><th>Lote</th><th>Quantidade</th><th>Total</th><th></th></tr></thead><tbody>{% for a in aquisicoes %}<tr><td>{{ a.dt_entrada.strftime('%d/%m/%Y') }}</td><td>{{ a.medicamento.nome }}</td><td>{{ a.fornecedor.nome }}</td><td>{{ a.lote }}</td><td>{{ a.quantidade }}</td><td>R$ {{ '%.2f'|format(a.vlr_total) }}</td><td><a class="btn btn-primary btn-sm" href="{{ url_for('aquisicoes.detalhe', id=a.id_aquisicao) }}">Detalhes</a></td></tr>{% else %}<tr><td colspan="7" class="text-center">Nenhuma aquisição registrada.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

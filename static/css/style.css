@@ -1,0 +1,4 @@
+body { min-height: 100vh; }
+.card { border: 0; }
+.navbar .nav-link { color: rgba(255, 255, 255, .9); }
+.table th { white-space: nowrap; }

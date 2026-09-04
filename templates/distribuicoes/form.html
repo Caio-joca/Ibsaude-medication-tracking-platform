@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Nova distribuição | IBSAÚDE{% endblock %}{% block content %}
+<h1 class="h3">Nova distribuição</h1><div class="alert alert-info">O sistema selecionará automaticamente os lotes com validade mais próxima (FEFO), sem utilizar lotes vencidos.</div>
+<form method="POST" enctype="multipart/form-data" class="card card-body shadow-sm"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="row g-3">
+<div class="col-md-6"><label class="form-label">Medicamento</label><select class="form-select" name="id_medicamento" required><option value="">Selecione</option>{% for m in medicamentos %}<option value="{{ m.id_medicamento }}">{{ m.nome }} - {{ m.codigo }}</option>{% endfor %}</select></div>
+<div class="col-md-6"><label class="form-label">Unidade de destino</label><select class="form-select" name="id_destino" required><option value="">Selecione</option>{% for u in unidades %}<option value="{{ u.id_destino }}">{{ u.nome }}</option>{% endfor %}</select></div>
+<div class="col-md-4"><label class="form-label">Quantidade</label><input class="form-control" type="number" min="1" name="quantidade" required></div>
+<div class="col-md-4"><label class="form-label">Referência do pedido</label><input class="form-control" name="pedido_referencia" required></div>
+<div class="col-md-4"><label class="form-label">Responsável pelo recebimento</label><input class="form-control" name="resp_recebimento" required></div>
+<div class="col-md-6"><label class="form-label">Responsável pela liberação</label><select class="form-select" name="resp_liberacao" required>{% for u in liberadores %}<option value="{{ u.id_usuario }}">{{ u.nome }}</option>{% endfor %}</select></div>
+<div class="col-md-6"><label class="form-label">Pedido formal (PDF/XML)</label><input class="form-control" type="file" name="documento" accept=".pdf,.xml" required></div>
+</div><button class="btn btn-success mt-3">Distribuir</button></form>
+{% endblock %}

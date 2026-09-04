@@ -5,13 +5,26 @@ venv/
 # Arquivos temporários do Python
 __pycache__/
 *.py[cod]
+.coverage
 
 # Configurações e senhas
 .env
 .env.*
+!.env.example
 
 # Banco de dados local
 database/*.db
+uploads/*
+!uploads/.gitkeep
+backups/*
+!backups/.gitkeep
+output/*
+!output/.gitkeep
+!output/pdf/
+!output/pdf/Dossie_Tecnico_IBSAUDE.pdf
+!output/presentation/
+!output/presentation/Apresentacao_Final_IBSAUDE.pptx
+tmp/
 
 # Configurações dos editores
 .vscode/
